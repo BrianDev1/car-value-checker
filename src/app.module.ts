@@ -4,12 +4,16 @@ import { ReportsModule } from './reports/reports.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config/config.schema';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       validationSchema: configValidationSchema,
+    }),
+    GraphQLModule.forRoot({
+      typePaths: ['./**/*.graphql'],
     }),
     UsersModule,
     ReportsModule,
