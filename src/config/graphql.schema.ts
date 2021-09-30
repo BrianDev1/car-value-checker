@@ -13,14 +13,23 @@ export interface InputCreateUser {
     password?: Nullable<string>;
 }
 
+export interface InputSignIn {
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+}
+
 export interface User {
     id: number;
     name: string;
     email: string;
 }
 
+export interface IQuery {
+    signIn(inputSignIn: InputSignIn): string | Promise<string>;
+}
+
 export interface IMutation {
-    createUser(inputCreateUser: InputCreateUser): User | Promise<User>;
+    signUp(inputCreateUser: InputCreateUser): User | Promise<User>;
 }
 
 type Nullable<T> = T | null;

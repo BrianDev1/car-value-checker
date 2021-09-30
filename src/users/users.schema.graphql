@@ -12,7 +12,17 @@ input InputCreateUser {
   password: String
 }
 
+input InputSignIn {
+  email: String
+  password: String
+}
+
+#Query
+type Query {
+  signIn(inputSignIn: InputSignIn!): String!
+}
+
 # Mutations
 type Mutation {
-  createUser(inputCreateUser: InputCreateUser!): User!
+  signUp(inputCreateUser: InputCreateUser!): User!
 }

@@ -1,4 +1,3 @@
-import { InputCreateUser } from './../config/graphql.schema';
 import {
   ConflictException,
   Injectable,
@@ -17,7 +16,7 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async signUp(inputCreateUser: CreateUserDto): Promise<void> {
+  async signUp(inputCreateUser: CreateUserDto) {
     const salter = await bcrypt.genSalt();
     const hashedPwd = await bcrypt.hash(inputCreateUser.password, salter);
 
@@ -28,7 +27,12 @@ export class UsersService {
     });
 
     try {
-      await this.userRepository.save(newUser);
+      const createdUser = await this.userRepository.save(newUser);
+      return {
+        id: createdUser.id,
+        name: createdUser.name,
+        email: createdUser.email,
+      };
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Email Already exists');
