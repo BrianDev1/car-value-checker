@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './users.entity';
 import * as bcrypt from 'bcrypt';
+import { convertGqlUser } from '../convert/users';
 
 @Injectable()
 export class UsersService {
@@ -28,11 +29,7 @@ export class UsersService {
 
     try {
       const createdUser = await this.userRepository.save(newUser);
-      return {
-        id: createdUser.id,
-        name: createdUser.name,
-        email: createdUser.email,
-      };
+      return convertGqlUser(createdUser);
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Email Already exists');
