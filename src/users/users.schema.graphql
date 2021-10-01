@@ -4,6 +4,7 @@ type User {
   id: Int!
   name: String!
   email: String!
+  accessToken: String!
 }
 
 input InputCreateUser {

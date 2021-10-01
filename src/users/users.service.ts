@@ -13,12 +13,14 @@ import { User } from './users.entity';
 import * as bcrypt from 'bcrypt';
 import { convertGqlUser } from '../convert/users';
 import { SignInUserDto } from './dto/sing-in-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
   async signUp(inputCreateUser: CreateUserDto) {
@@ -52,7 +54,9 @@ export class UsersService {
     }
 
     if (await bcrypt.compare(inputSignIn.password, user.password)) {
-      return convertGqlUser(user);
+      const username = inputSignIn.email;
+      const accessToken = await this.jwtService.signAsync(username);
+      return { ...convertGqlUser(user), accessToken: accessToken };
     }
     throw new UnauthorizedException('Please check your login credentials');
   }
