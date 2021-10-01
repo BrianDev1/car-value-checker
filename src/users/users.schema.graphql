@@ -21,6 +21,7 @@ input InputSignIn {
 #Query
 type Query {
   signIn(inputSignIn: InputSignIn!): User!
+  whoAmI: String!
 }
 
 # Mutations

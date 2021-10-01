@@ -27,6 +27,7 @@ export interface User {
 
 export interface IQuery {
     signIn(inputSignIn: InputSignIn): User | Promise<User>;
+    whoAmI(): string | Promise<string>;
 }
 
 export interface IMutation {

@@ -65,4 +65,8 @@ export class UsersService {
     const accessToken = await this.jwtService.signAsync({ username: email });
     return accessToken;
   }
+
+  async whoAmI(user: User) {
+    return user.name;
+  }
 }
