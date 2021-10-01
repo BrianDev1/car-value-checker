@@ -10,4 +10,7 @@ export class UserDto implements User {
 
   @Expose()
   email: string;
+
+  @Expose()
+  accessToken: string;
 }

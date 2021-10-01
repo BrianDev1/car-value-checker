@@ -35,7 +35,8 @@ export class UsersService {
 
     try {
       const createdUser = await this.userRepository.save(newUser);
-      return convertGqlUser(createdUser);
+      const accessToken = await this._createToken(createdUser.email);
+      return { ...convertGqlUser(createdUser), accessToken: accessToken };
     } catch (error) {
       if (error.code === CustomErrors.AlreadyExists) {
         throw new ConflictException('Email Already exists');
@@ -54,10 +55,14 @@ export class UsersService {
     }
 
     if (await bcrypt.compare(inputSignIn.password, user.password)) {
-      const username = inputSignIn.email;
-      const accessToken = await this.jwtService.signAsync(username);
+      const accessToken = await this._createToken(inputSignIn.email);
       return { ...convertGqlUser(user), accessToken: accessToken };
     }
     throw new UnauthorizedException('Please check your login credentials');
+  }
+
+  async _createToken(email: string): Promise<string> {
+    const accessToken = await this.jwtService.signAsync({ username: email });
+    return accessToken;
   }
 }
