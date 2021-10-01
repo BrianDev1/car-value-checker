@@ -51,7 +51,7 @@ export class UsersService {
       throw new NotFoundException('Unable to find user');
     }
 
-    if (user && (await bcrypt.compare(inputSignIn.password, user.password))) {
+    if (await bcrypt.compare(inputSignIn.password, user.password)) {
       return convertGqlUser(user);
     }
     throw new UnauthorizedException('Please check your login credentials');
