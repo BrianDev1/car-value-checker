@@ -66,6 +66,7 @@ export class UsersService {
     return accessToken;
   }
 
+  // Test
   async whoAmI(user: User) {
     return user.name;
   }
