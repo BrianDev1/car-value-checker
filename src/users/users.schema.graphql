@@ -19,7 +19,7 @@ input InputSignIn {
 
 #Query
 type Query {
-  signIn(inputSignIn: InputSignIn!): String!
+  signIn(inputSignIn: InputSignIn!): User!
 }
 
 # Mutations
