@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config/config.schema';
 import { GraphQLModule } from '@nestjs/graphql';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import { GraphQLModule } from '@nestjs/graphql';
     ReportsModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        ssl: configService.get('NODE_ENV') === 'prod',
+        ssl: process.env.NODE_ENV === 'prod',
         type: 'postgres',
         host: configService.get('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
@@ -30,10 +32,17 @@ import { GraphQLModule } from '@nestjs/graphql';
         autoLoadEntities: true,
         synchronize: true,
       }),
-      inject: [ConfigService],
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        // Global pipe
+        whitelist: true,
+      }),
+    },
+  ],
 })
 export class AppModule {}
