@@ -8,12 +8,12 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     fakeUserService = {
-      signUp: (inputCreateUser: CreateUserDto) =>
+      createUser: (inputCreateUser: CreateUserDto) =>
         Promise.resolve({
           id: 1,
           name: inputCreateUser.name,
           email: inputCreateUser.email,
-          accessToken: 'hsidhsudhusd',
+          password: inputCreateUser.password,
         }),
     };
 
@@ -31,9 +31,10 @@ describe('UsersService', () => {
   it('create user', async () => {
     const newUser = await fakeUserService.signUp({
       name: 'Tester',
-      email: 't@t.t',
+      email: 't@t.ttt',
       password: 'iusdhsjds',
     });
+
     expect(newUser.id).toBe(1);
   });
 });
