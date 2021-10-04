@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from './users.entity';
 import { SignInUserDto } from './dto/sing-in-user.dto';
-import { CurrentUser } from 'src/decorators/user.decorators';
+import { CurrentUser } from '../decorators/user.decorators';
 import { UseGuards } from '@nestjs/common';
 
 @Resolver('User')

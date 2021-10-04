@@ -23,18 +23,35 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
+  // CRUD
+  async createUser(inputCreateUser: CreateUserDto) {
+    const newUser = this.userRepository.create({
+      name: inputCreateUser.name,
+      email: inputCreateUser.email,
+      password: inputCreateUser.password,
+    });
+
+    return await this.userRepository.save(newUser);
+  }
+
+  async findUser(email: string) {
+    return await this.userRepository.findOne({
+      email: email,
+    });
+  }
+
+  /*******************************************************/
+
   async signUp(inputCreateUser: CreateUserDto) {
     const salter = await bcrypt.genSalt();
     const hashedPwd = await bcrypt.hash(inputCreateUser.password, salter);
 
-    const newUser = this.userRepository.create({
-      name: inputCreateUser.name,
-      email: inputCreateUser.email,
-      password: hashedPwd,
-    });
-
     try {
-      const createdUser = await this.userRepository.save(newUser);
+      const createdUser = await this.createUser({
+        name: inputCreateUser.name,
+        email: inputCreateUser.email,
+        password: hashedPwd,
+      });
       const accessToken = await this._createToken(createdUser.email);
       return { ...convertGqlUser(createdUser), accessToken: accessToken };
     } catch (error) {
@@ -46,10 +63,7 @@ export class UsersService {
   }
 
   async signIn(inputSignIn: SignInUserDto) {
-    const user = await this.userRepository.findOne({
-      email: inputSignIn.email,
-    });
-
+    const user = await this.findUser(inputSignIn.email);
     if (!user) {
       throw new NotFoundException('Unable to find user');
     }
